@@ -1,16 +1,17 @@
 #include<iostream>
 using namespace std;
+
 struct node
 {
 	int data;
 	node *next;	
 };
-class list
+class List
 {
 		private:
 		node *head, *tail;
 		public:
-		list()
+		List()
 		{
 			head=NULL;
 			tail=NULL;
@@ -96,11 +97,61 @@ class list
 				current=current->next;
 			}
 			previous->next=current->next;
+			delete current;
+		}
+		int element_position(int aData)
+		{
+			node *temp = new node;
+			int pos = 1;
+
+			temp = head;
+			while(temp != NULL){
+				if(temp->data == aData){
+					return pos;
+				}
+				temp = temp->next;
+				pos++;
+			}
+			return 0;
+		}
+		void delete_element(int aData)
+		{
+
+			int pos = element_position(aData);
+			if(pos == 1){
+				delete_first();
+			}else{
+				delete_position(pos);
+			}
+		}
+		void sort(node *anker = new node){
+			node *temp = new node;
+			node *checked = new node;
+			if(anker == NULL){
+				anker = head;
+			}
+			if(anker != NULL){
+				temp = anker;
+				while(temp->next != NULL){
+					checked = temp->next;
+					if(checked->data < anker->data){
+						temp->next = checked->next;
+						checked->next = head;
+						head = checked;
+					}
+					temp = temp->next;
+				}
+				if(anker == head){
+					sort(anker->next);
+				}else{
+					sort(NULL);
+				}
+			}
 		}
 };
 int main()
 {
-	list obj;
+	List obj;
 	obj.createnode(25);
 	obj.createnode(50);
 	obj.createnode(90);
@@ -130,7 +181,7 @@ int main()
 	obj.delete_first();
 	obj.display();
 	cout<<"\n--------------------------------------------------\n";
-	cout<<"-----------------Deleing At End-------------------";
+	cout<<"------------------Deleting At End-----------------";
 	cout<<"\n--------------------------------------------------\n";
 	obj.delete_last();
 	obj.display();
@@ -138,6 +189,21 @@ int main()
 	cout<<"--------------Deleting At Particular--------------";
 	cout<<"\n--------------------------------------------------\n";
 	obj.delete_position(4);
+	obj.display();
+	cout<<"\n--------------------------------------------------\n";
+	cout<<"-----------------Element Position-----------------";
+	cout<<"\n--------------------------------------------------\n";	
+	int ele = 90;
+	cout << ele << " -> " << obj.element_position(ele);
+	cout<<"\n--------------------------------------------------\n";
+	cout<<"------------------Delete Element------------------";
+	cout<<"\n--------------------------------------------------\n";	
+	obj.delete_element(ele);
+	obj.display();
+	cout<<"\n--------------------------------------------------\n";
+	cout<<"-----------------------Sort-----------------------";
+	cout<<"\n--------------------------------------------------\n";	
+	obj.sort(NULL);
 	obj.display();
 	cout<<"\n--------------------------------------------------\n";
 	system("pause");
